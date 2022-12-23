@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Tree,
   getBackendOptions,
   MultiBackend,
-  NodeModel,
-  DropOptions,
 } from "@minoru/react-dnd-treeview";
 import { DndProvider } from "react-dnd";
 const TreeComp = () => {
