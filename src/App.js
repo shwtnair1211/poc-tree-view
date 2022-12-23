@@ -6,8 +6,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/poc1" element={<RSTree />} />
-        <Route path="/poc" element={<MuiTree />} />
+        <Route path="/" element={<MuiTree />} />
+        <Route path="/poc" element={<RSTree />} />
       </Routes>
     </BrowserRouter>
   );
