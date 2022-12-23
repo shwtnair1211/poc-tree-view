@@ -51,6 +51,10 @@ const TreeViewDemo = (props) => {
         });
     }
   };
+
+  const handleToggle = (e, nodeId) => {
+    setExpanded(nodeId);
+  };
   const createItemsFromTree = (fromTree) => {
     if (fromTree.children.length) {
       return (
@@ -72,6 +76,7 @@ const TreeViewDemo = (props) => {
       selected={selected}
       onNodeSelect={handleChange}
       expanded={expanded}
+      onNodeToggle={handleToggle}
     >
       {createItemsFromTree(tree)}
     </TreeView>
