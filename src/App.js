@@ -1,13 +1,15 @@
 import "./App.css";
 import MuiTree from "./MuiTree";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { DndProvider } from "react-dnd";
-
+import RSTree from "./RSTree";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 function App() {
   return (
-    <DndProvider backend={HTML5Backend}>
-      <MuiTree />
-    </DndProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/poc1" element={<RSTree />} />
+        <Route path="/poc" element={<MuiTree />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
