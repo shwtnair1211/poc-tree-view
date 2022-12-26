@@ -1,58 +1,56 @@
-import React from "react";
-import {
-  Tree,
-  StaticTreeDataProvider,
-  UncontrolledTreeEnvironment,
-} from "react-complex-tree";
+import React, { useState } from "react";
+import { Tree, UncontrolledTreeEnvironment } from "react-complex-tree";
 import "react-complex-tree/lib/style.css";
+import { EventEmitter } from "./EventEmitter";
 import initialData from "./myjsonfile.json";
-// const mockApiCall = async (nextId) => {
-//   return new Promise((resolve) => {
-//     setTimeout(() => {
-//       resolve({
-//         [nextId]: {
-//           index: nextId,
-//           canMove: true,
-//           isFolder: true,
-//           children: [],
-//           data: "test child",
-//           canRename: true,
-//         },
-//       });
-//     }, 100);
-//   });
-// };
+const onDidChangeTreeDataEmitter = new EventEmitter();
 
 const SingleTree = () => {
-  //   const [expandedItems, setExpandedItems] = useState([]);
-  //   const [treeData, setTreeData] = useState(initialData);
-  //   const handleExpand = (item) => {
-  //     const nextId = Math.ceil(Math.random() * 100);
-  //     mockApiCall(nextId)
-  //       .then((result) => {
-  //         console.log(result);
-  //         setExpandedItems([...expandedItems, item.index]);
+  const [treeData, setTreeData] = useState(initialData);
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
 
-  //         setTreeData({
-  //           ...treeData,
-  //           ...result,
-  //           [item.index]: { ...item, children: [nextId] },
-  //         });
-  //       })
-  //       .catch((err) => console.error(err));
-  //   };
+  const handleChange = (itemId, newChildren) => {
+    const isFolder = treeData[itemId].isFolder || true;
+    setTreeData({
+      ...treeData,
+      [itemId]: {
+        ...treeData[itemId],
+        children: newChildren,
+        isFolder,
+      },
+    });
+
+    forceUpdate();
+  };
   return (
     <UncontrolledTreeEnvironment
-      dataProvider={
-        new StaticTreeDataProvider(initialData, (item, data) => ({
-          ...item,
-          data,
-        }))
-      }
-      getItemTitle={(item) => item.data}
-      viewState={{}}
       canDragAndDrop={true}
       canReorderItems={true}
+      canDropOnNonFolder={true}
+      canDropOnFolder={true}
+      dataProvider={{
+        getTreeItem: (itemId) => {
+          console.log(itemId);
+          return new Promise((res) => {
+            res(treeData[itemId]);
+          });
+        },
+        onChangeItemChildren: async (itemId, newChildren) => {
+          handleChange(itemId, newChildren);
+          onDidChangeTreeDataEmitter.emit([itemId]);
+        },
+        onDidChangeTreeData: (listener) => {
+          const handlerId = onDidChangeTreeDataEmitter.on((payload) => {
+            listener(payload);
+          });
+          return { dispose: () => onDidChangeTreeDataEmitter.off(handlerId) };
+        },
+      }}
+      getItemTitle={(item) => item.data}
+      viewState={{
+        "tree-3": {},
+      }}
     >
       <Tree treeId="tree-3" rootItem="root" treeLabel="Tree Example" />
     </UncontrolledTreeEnvironment>
