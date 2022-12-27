@@ -53,5 +53,5 @@ const createNode = (count) => {
   return newData;
 };
 
-let json = JSON.stringify(createNode(1000));
+let json = JSON.stringify(createNode(5000));
 fs.writeFile("myjsonfile.json", json, "utf8", () => console.log("done"));
