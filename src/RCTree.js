@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { Tree, UncontrolledTreeEnvironment } from "react-complex-tree";
 import "react-complex-tree/lib/style.css";
 import { EventEmitter } from "./EventEmitter";
@@ -7,8 +7,7 @@ const onDidChangeTreeDataEmitter = new EventEmitter();
 
 const SingleTree = () => {
   const [treeData, setTreeData] = useState(initialData);
-  const [, updateState] = React.useState();
-  const forceUpdate = React.useCallback(() => updateState({}), []);
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const handleChange = (itemId, newChildren) => {
     const isFolder = treeData[itemId].isFolder || true;
